@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "830771903868",
+    "firebase_url": "https://batchdriven-97457.firebaseio.com",
+    "project_id": "batchdriven-97457",
+    "storage_bucket": "batchdriven-97457.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:830771903868:android:68db9c2bf1d5f41824b8f9",
+        "android_client_info": {
+          "package_name": "com.batchdriven"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "830771903868-4ks7grl374dac4lrbkvae85m1u09ccjq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzEcJJqW4dKKNJHcLyA7clJIJGXIDV9yk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "830771903868-4ks7grl374dac4lrbkvae85m1u09ccjq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "830771903868-hvp0lp6tv5s6ukjcold6qh34gnv66qe0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.batchdriven"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

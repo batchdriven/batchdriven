@@ -7,7 +7,11 @@ target 'BatchDriven' do
   # config = use_native_modules!
 
   # use_react_native!(:path => config["reactNativePath"])
- pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
+  pod 'Firebase/Core', '~> 6.13.0'
+
+  pod 'Firebase/Auth', '~> 6.13.0'
+
+  pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
   pod 'RCTTypeSafety', :path => "../node_modules/react-native/Libraries/TypeSafety"
@@ -38,7 +42,8 @@ target 'BatchDriven' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-
+  pod 'RNFirebase', :path => '../node_modules/react-native-firebase/ios'
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
   target 'BatchDrivenTests' do
     inherit! :complete
