@@ -11,10 +11,15 @@ export default class EditUserDetails extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     headerTitle: <Text style={{ fontWeight: 'bold', fontSize: 18 }}>{navigation.getParam('title')}</Text>,
     headerRight: <View>
-      {navigation.getParam('editProfile') !== undefined && navigation.getParam('editProfile') != null && navigation.getParam('editProfile') == 'yes' && (<TouchableOpacity onPress={() => navigation.navigate('Home')}
-        style={{ marginEnd: 20 }}>
-        <Icon name="logout" size={24} />
-      </TouchableOpacity>)}
+      {navigation.getParam('editProfile') !== undefined && navigation.getParam('editProfile') != null && navigation.getParam('editProfile') == 'yes' &&
+        (<TouchableOpacity onPress={() => {
+          Firebase.auth().signOut()
+          navigation.navigate('Login')
+        }}
+          style={{ marginEnd: 20 }}>
+          <Icon name="logout" size={24} />
+        </TouchableOpacity>
+        )}
     </View>,
   });
 
@@ -31,7 +36,7 @@ export default class EditUserDetails extends React.Component {
         <TextInput
           placeholder="Name"
           autoCapitalize="none"
-          style={styles.textInput}
+          style={[styles.textInput, { marginTop: 60 }]}
           onChangeText={name => this.setState({ name })}
           value={this.state.name}
         />
@@ -42,10 +47,13 @@ export default class EditUserDetails extends React.Component {
           style={styles.textInput}
           onChangeText={email => this.setState({ email })}
           value={this.state.email}
+          editable={false}
         />
-        <TouchableOpacity onPress={this.saveChanges} style={styles.btn}>
+
+        <TouchableOpacity onPress={this.saveChanges} style={[styles.btn, { marginTop: 60 }]}>
           <Text style={styles.btn_txt}>Save Changes</Text>
         </TouchableOpacity>
+
         <Loader loading={this.state.loading} />
       </View>
     )

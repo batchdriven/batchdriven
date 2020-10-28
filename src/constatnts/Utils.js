@@ -5,9 +5,8 @@ import Toast from 'react-native-root-toast';
 // Add a Toast on screen.
 toastShow = (msg) => {
   console.log('msg : ', msg)
-  Toast.show('show meaage', {
+  Toast.show(msg, {
     visible: true,
-    backgroundColor: 'green',
     opacity: 1,
     duration: Toast.durations.LONG,
     position: Toast.positions.BOTTOM,

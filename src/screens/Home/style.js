@@ -29,7 +29,15 @@ export default {
     right: 30,
     bottom: 30,
     backgroundColor: Colors.primaryColor,
-    borderRadius: 50 / 2
+    borderRadius: 50 / 2,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+
+    elevation: 3,
   },
 
   floatingButtonStyle: {
