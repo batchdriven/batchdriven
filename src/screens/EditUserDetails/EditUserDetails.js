@@ -82,7 +82,12 @@ class EditUserDetails extends React.Component {
         newArray.forEach((element, index) => {
           if (element.id === this.state.data.id) {
             newArray[index].name = this.state.name;
-            Utils.saveData(element)
+            let editProfile = this.props.navigation.getParam('editProfile')
+            console.log('editProfile : ', editProfile)
+            if (editProfile !== undefined && editProfile != null && editProfile == 'yes') {
+              Utils.saveData(element)
+            }
+
           }
         });
 
