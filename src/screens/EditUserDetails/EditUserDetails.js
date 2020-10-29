@@ -1,16 +1,17 @@
 import React from 'react';
-import { Text, View, FlatList, TouchableOpacity, TextInput } from 'react-native';
+import { Text, View, FlatList, TouchableOpacity, TextInput, Keyboard } from 'react-native';
 import styles from './style'
 import { connect } from 'react-redux';
 import Firebase from '../../config/config'
 import { Loader } from '../../components/Loader';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { setUsersList } from '../../redux/action';
 
-export default class EditUserDetails extends React.Component {
+class EditUserDetails extends React.Component {
 
   static navigationOptions = ({ navigation }) => ({
     headerTitle: <Text style={{ fontWeight: 'bold', fontSize: 18 }}>{navigation.getParam('title')}</Text>,
-    headerRight: <View>
+    headerRight: () => <View>
       {navigation.getParam('editProfile') !== undefined && navigation.getParam('editProfile') != null && navigation.getParam('editProfile') == 'yes' &&
         (<TouchableOpacity onPress={() => {
           Firebase.auth().signOut()
@@ -23,10 +24,65 @@ export default class EditUserDetails extends React.Component {
     </View>,
   });
 
-  state = { name: '', email: '', password: '', cpassword: '', errorMessage: null, loading: false }
+  state = {
+    name: '',
+    email: '',
+    data: null,
+    errorMessage: null,
+    loading: false
+  }
+
+  componentDidMount = async () => {
+    const data = this.props.navigation.getParam('data')
+    await this.setState({
+      data: data,
+      name: data !== undefined && data !== null && this.props.navigation.getParam('data').name,
+      email: data !== undefined && data !== null && this.props.navigation.getParam('data').email
+    })
+
+    console.log("data item : ", this.state.name)
+  }
 
   saveChanges = () => {
+    Keyboard.dismiss()
+    if (this.state.name.trim().length == 0) {
+      return alert('Name is required');
+    }
 
+    this.showLoader()
+    const userRef = Firebase.firestore().collection('users').doc(`${this.state.data.id}`);
+
+    userRef
+      .update({
+        name: this.state.name.trim(),
+      })
+      .then(async () => {
+        console.log('User updated!');
+        const newArray = [...this.props.data.users_list];
+        console.log('newArray : ', newArray)
+        newArray.forEach((element, index) => {
+          if (element.id === this.state.data.id) {
+            newArray[index].name = this.state.name;
+          }
+        });
+
+        console.log('after update : ', newArray)
+
+        await this.props.setUsersList(newArray)
+        this.hideLoader()
+
+        this.props.navigation.navigate('Home')
+
+      });
+
+  }
+
+  showLoader = () => {
+    this.setState({ loading: true });
+  }
+
+  hideLoader = () => {
+    this.setState({ loading: false });
   }
 
   render() {
@@ -35,7 +91,7 @@ export default class EditUserDetails extends React.Component {
 
         <TextInput
           placeholder="Name"
-          autoCapitalize="none"
+          autoCapitalize="words"
           style={[styles.textInput, { marginTop: 60 }]}
           onChangeText={name => this.setState({ name })}
           value={this.state.name}
@@ -69,9 +125,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-
+    setUsersList: (data) => {
+      dispatch(setUsersList(data))
+    },
   }
 
 }
 
-// export default connect(mapStateToProps, mapDispatchToProps)(EditUserDetails)
+export default connect(mapStateToProps, mapDispatchToProps)(EditUserDetails)

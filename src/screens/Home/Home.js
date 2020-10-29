@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Platform, Image, Text, View, FlatList, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Platform, Image, Text, View, FlatList, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import styles from './style'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import Firebase from '../../config/config'
 import { Loader } from '../../components/Loader';
 import Colors from '../../constatnts/Colors';
-import { getUsersList } from '../../redux/action';
+import { getUsersList, setUsersList } from '../../redux/action';
 
 class Home extends React.Component {
 
@@ -18,16 +18,6 @@ class Home extends React.Component {
   state = {
     currentUser: null,
     loading: false,
-    data: [
-      { name: 'seema nagar', },
-      { name: 'Mayuri Mishra' },
-      { name: 'seema nagar', },
-      { name: 'Mayuri Mishra' },
-      { name: 'seema nagar', },
-      { name: 'Mayuri Mishra' },
-      { name: 'seema nagar', },
-      { name: 'Mayuri Mishra' }
-    ]
   }
 
   componentDidMount = async () => {
@@ -41,6 +31,38 @@ class Home extends React.Component {
     this.hideLoader()
     console.log('this.props.data.users_list', this.props.data.users_list)
 
+  }
+
+  _deleteUsers = (userId, index) => {
+    Alert.alert(
+      'Delete User',
+      'Are you sure you want to delete user?',
+      [
+        {
+          text: 'No',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        { text: 'Yes', onPress: () => this.networkCallForDeleteUser(userId, index) },
+      ],
+      { cancelable: false }
+    );
+
+  }
+
+  networkCallForDeleteUser = (userId, index) => {
+    this.showLoader()
+    const userRef = Firebase.firestore().collection('users').doc(`${userId}`);
+
+    userRef
+      .delete()
+      .then(() => {
+        console.log('User deleted!');
+        Firebase.auth().delete(userId)
+        this.props.setUsersList([...this.props.data.users_list.slice(0, index), ...this.props.data.users_list.slice(index + 1)])
+
+        this.hideLoader()
+      });
   }
 
   showLoader = () => {
@@ -76,11 +98,12 @@ class Home extends React.Component {
 
                 <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
                   <TouchableOpacity style={{ marginEnd: 8 }} onPress={() => this.props.navigation.navigate('EditUserDetails', {
-                    title: 'Edit User Details'
+                    title: 'Edit User Details',
+                    data: item
                   })}>
                     <IconFontAwesome name="edit" size={24} color={Colors.primaryColor} />
                   </TouchableOpacity>
-                  <TouchableOpacity >
+                  <TouchableOpacity onPress={() => this._deleteUsers(item.id, index)}>
                     <Icon name="delete-outline" size={28} color={Colors.primaryColor} />
                   </TouchableOpacity>
                 </View>
@@ -116,6 +139,9 @@ const mapDispatchToProps = dispatch => {
   return {
     getUsersList: async () => {
       await dispatch(getUsersList())
+    },
+    setUsersList: async (data) => {
+      await dispatch(setUsersList(data))
     },
   }
 

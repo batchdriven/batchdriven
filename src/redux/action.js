@@ -28,49 +28,13 @@ export const getUsersList = () => {
         let data = []
 
         if (querySnapshot.docs.length == 0) {
-          //throw 'Feed does not exist!';
           data = []
         } else {
           data = querySnapshot.docs.map(doc => doc.data())
         }
 
         dispatch(setUsersList(data));
-        /* ... */
       });
 
-    // console.log('feedReference : ', feedReference)
-    // return Firebase.firestore().runTransaction(async transaction => {
-    //   console.log('transaction : ', transaction)
-    //   // Get feed data first
-    //   const feedSnapshot = await transaction.get(feedReference);
-
-    //   console.log('feedSnapshot', feedSnapshot)
-    //   let data = []
-    //   if (!feedSnapshot.exists) {
-    //     //throw 'Feed does not exist!';
-    //     data = []
-    //   } else {
-    //     console.log('feedSnapshot : ', feedSnapshot.data());
-    //     data = feedSnapshot.data().images
-    //     console.log('data : ', data)
-    //   }
-
-    //   dispatch(setUsersList(data));
-
-    // });
   }
 }
-
-  // Firebase.database.ref('todos').on('value', (snapshot) => {
-  //   const vals = snapshot.val();
-  //   let _records = [];
-  //   for (var key in vals) {
-  //     _records.push({
-  //       ...vals[key],
-  //       id: key
-  //     });
-  //   }
-  //   // setTodos is a Redux action that would update the todo store
-  //   // to the _records payload
-  //   dispatch(setImageList(_records));
-  // })
