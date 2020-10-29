@@ -1,5 +1,7 @@
 import React from 'react';
+import { AsyncStorage } from 'react-native';
 import Toast from 'react-native-root-toast';
+import Constant from './Constant';
 
 
 // Add a Toast on screen.
@@ -48,8 +50,27 @@ _emailValidate = (text) => {
   }
 }
 
+saveData = async (data) => {
+  console.log('saveData : ', data)
+  try {
+    await AsyncStorage.setItem(Constant.USERINFO, JSON.stringify(data))
+    console.log('Data successfully saved', JSON.stringify(data))
+  } catch (e) {
+    console.log('Failed to save the data to the storage')
+  }
+}
+
+guidGenerator = () => {
+  var S4 = function () {
+    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+  };
+  return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+}
+
 
 export default {
   toastShow,
-  _emailValidate
+  _emailValidate,
+  saveData,
+  guidGenerator
 }

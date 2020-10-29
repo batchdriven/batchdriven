@@ -1,13 +1,19 @@
 import React, { Component } from "react";
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, AsyncStorage } from 'react-native';
 import Firebase, { db } from '../config/config'
 import Colors from "../constatnts/Colors";
+import Constant from "../constatnts/Constant";
 
 export default class Splash extends Component {
-  componentDidMount() {
-    Firebase.auth().onAuthStateChanged(user => {
-      this.props.navigation.navigate(user ? 'Home' : 'Login')
-    })
+
+  componentDidMount = async () => {
+    var user = await AsyncStorage.getItem(Constant.USERINFO);
+    if (user !== undefined && user) {
+      this.props.navigation.navigate('Main');
+    } else {
+      this.props.navigation.navigate('Login');
+    }
+
   }
 
   render() {

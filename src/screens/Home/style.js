@@ -7,7 +7,7 @@ export default {
   row: {
     padding: 16,
     flex: 1,
-    margin: 16,
+    margin: 20,
     marginTop: 0,
     backgroundColor: '#fff',
     flexDirection: 'row',

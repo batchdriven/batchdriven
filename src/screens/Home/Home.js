@@ -13,19 +13,23 @@ class Home extends React.Component {
 
   static navigationOptions = ({ navigation }) => ({
     headerTitle: <Text style={{ fontWeight: 'bold', fontSize: 18 }}>Home</Text>,
+    headerRight: () => <TouchableOpacity
+      onPress={() => navigation.navigate('EditUserDetails',
+        {
+          editProfile: 'yes',
+          title: 'Edit Profile'
+        }
+      )}
+      style={{ marginEnd: 20 }}>
+      <Icon name="account-edit-outline" size={28} />
+    </TouchableOpacity>,
   });
 
   state = {
-    currentUser: null,
     loading: false,
   }
 
   componentDidMount = async () => {
-
-    const { currentUser } = Firebase.auth()
-    console.log('home currentUser : ', currentUser)
-    this.setState({ currentUser })
-
     this.showLoader()
     await this.props.getUsersList()
     this.hideLoader()
@@ -58,7 +62,7 @@ class Home extends React.Component {
       .delete()
       .then(() => {
         console.log('User deleted!');
-        Firebase.auth().delete(userId)
+        //Firebase.auth().delete(userId)
         this.props.setUsersList([...this.props.data.users_list.slice(0, index), ...this.props.data.users_list.slice(index + 1)])
 
         this.hideLoader()
@@ -86,7 +90,8 @@ class Home extends React.Component {
       return (
         <View style={styles.container}>
           <FlatList
-            showsHorizontalScrollIndicator={false}
+
+            showsVerticalScrollIndicator={false}
             data={this.props.data.users_list}
             style={{ paddingTop: 16 }}
             renderItem={({ item, index }) =>
@@ -111,16 +116,7 @@ class Home extends React.Component {
             }
             keyExtractor={(item, index) => <View style={{ marginBottom: 20 }}></View>}
           />
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('EditUserDetails',
-              {
-                editProfile: 'yes',
-                title: 'Edit Profile'
-              }
-            )}
-            style={styles.touchableOpacityStyle}>
-            <Icon name="account-edit-outline" size={30} color="#fff" />
-          </TouchableOpacity>
+
           <Loader loading={this.state.loading} />
         </View>
       )

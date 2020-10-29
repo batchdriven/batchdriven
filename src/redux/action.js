@@ -21,7 +21,7 @@ export const getUsersList = () => {
   return async (dispatch) => {
     const feedReference = await Firebase.firestore()
       .collection('users')
-      .limit(20)
+      // .limit(20)
       .get()
       .then(querySnapshot => {
         console.log('querySnapshot : ', querySnapshot.docs.length)

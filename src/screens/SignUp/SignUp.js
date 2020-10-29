@@ -6,6 +6,7 @@ import { Loader } from "../../components/Loader";
 import Firebase from '../../config/config'
 import Colors from "../../constatnts/Colors";
 import styles from './style'
+import md5 from "md5";
 
 export default class SignUp extends React.Component {
   state = { name: '', email: '', password: '', cpassword: '', errorMessage: null, loading: false }
@@ -28,6 +29,10 @@ export default class SignUp extends React.Component {
       return alert('Password is required');
     }
 
+    if (this.state.password.trim().length < 6) {
+      alert('Password must contain at least 6 characters')
+      return;
+    }
 
     if (this.state.cpassword.trim().length == 0) {
       return alert('Confirm Password is required');
@@ -39,35 +44,46 @@ export default class SignUp extends React.Component {
 
     this.showLoader()
 
-    Firebase
-      .auth()
-      .createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then((response) => {
-        console.log('register : ', response.user.uid)
-        const uid = response.user.uid
-        const data = {
-          id: uid,
-          email: this.state.email,
-          name: this.state.name,
-        };
-        const usersRef = Firebase.firestore()
-        usersRef
-          .collection('users')
-          .doc(uid)
-          .set(data)
-          .then((docRef) => {
-            this.hideLoader()
-            console.log("Document written with ID: ", docRef);
-            this.props.navigation.navigate('Home')
-          })
-          .catch((error) => {
-            this.hideLoader()
-            console.error("Error adding document: ", error);
-          });
+    const usersRef = Firebase.firestore()
+
+    usersRef
+      .collection('users')
+      .where('email', '==', this.state.email)
+      .get()
+      .then((docRef) => {
+        this.hideLoader()
+        console.log("Document written with ID: ", docRef.docs);
+        if (docRef.docs.length == 0) {
+
+          const id = Utils.guidGenerator()
+          const jsonData = {
+            id: id,
+            name: this.state.name.trim(),
+            email: this.state.email.trim(),
+            password: md5(this.state.password)
+          }
+          usersRef.collection('users')
+            .doc(id)
+            .set(jsonData)
+            .then((response) => {
+              console.log('User added!', response);
+              alert('User registered succesfully')
+              Utils.saveData(jsonData)
+              this.props.navigation.navigate('Home')
+            }).catch((error) => {
+              this.hideLoader()
+              console.error("Error adding document: ", error);
+            });
+
+        } else {
+          alert('The email address is already in use by another account.')
+        }
+
+        //this.props.navigation.navigate('Home')
       })
       .catch((error) => {
         this.hideLoader()
-        alert(error.message)
+        console.error("Error adding document: ", error);
       });
   }
 
@@ -95,6 +111,9 @@ export default class SignUp extends React.Component {
           style={styles.textInput}
           onChangeText={name => this.setState({ name })}
           value={this.state.name}
+          ref="name"
+          onSubmitEditing={() => this.refs.email.focus()}
+          returnKeyType='next'
         />
 
         <TextInput
@@ -103,6 +122,9 @@ export default class SignUp extends React.Component {
           style={styles.textInput}
           onChangeText={email => this.setState({ email })}
           value={this.state.email}
+          ref="email"
+          onSubmitEditing={() => this.refs.password.focus()}
+          returnKeyType='next'
         />
         <TextInput
           secureTextEntry
@@ -111,6 +133,9 @@ export default class SignUp extends React.Component {
           style={styles.textInput}
           onChangeText={password => this.setState({ password })}
           value={this.state.password}
+          ref="password"
+          onSubmitEditing={() => this.refs.cpassword.focus()}
+          returnKeyType='next'
         />
         <TextInput
           secureTextEntry
@@ -119,6 +144,9 @@ export default class SignUp extends React.Component {
           style={styles.textInput}
           onChangeText={cpassword => this.setState({ cpassword })}
           value={this.state.cpassword}
+          ref="cpassword"
+          onSubmitEditing={() => this.refs.cpassword.focus()}
+          returnKeyType='done'
         />
         <TouchableOpacity onPress={this.handleSignUp} style={styles.btn}>
           <Text style={styles.btn_txt}>Sign Up</Text>

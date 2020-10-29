@@ -11,7 +11,7 @@ export default {
   textInput: {
     height: 40,
     fontSize: 14,
-    width: '90%',
+    width: '100%',
     borderColor: Colors.borderColor,
     borderBottomWidth: 1,
     paddingTop: 8,
@@ -20,7 +20,7 @@ export default {
   btn: {
     backgroundColor: Colors.primaryColor, height: 48,
     alignSelf: 'center', justifyContent: 'center',
-    width: '90%', alignItems: 'center',
+    width: '100%', alignItems: 'center',
     marginTop: 20,
     marginBottom: 20
   },
