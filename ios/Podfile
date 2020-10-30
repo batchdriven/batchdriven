@@ -45,6 +45,9 @@ target 'BatchDriven' do
 
   pod 'RNFirebase', :path => '../node_modules/react-native-firebase/ios'
   pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+    pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+    pod 'RNScreens', :path => '../node_modules/react-native-screens'
+
 
   target 'BatchDrivenTests' do
     inherit! :complete
